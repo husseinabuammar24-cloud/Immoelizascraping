@@ -1,23 +1,25 @@
-Title : Output final - Data set 
-Transaction Type (to rent or to sale)
-furnished or not
-Property Type (Apartment, House, Businesses, Land, Garage, Investment property, Student housing, Miscellaneous property)
-Date of construction 
-Condition (new or renovated or to renovated) 
-Size of the land (m2)
-Size of the house (m2)
-PEB (kW for m²)
-Elevator or not ? 
-Room numbers 
-Numbers of bathroom
-Swimming or not ? 
-Balcon or not ? 
-Garden or not ? 
-Terrasse or not ? 
-Price (€) 
-region 
-code postal
-street
-nbr adress 
-Availability (datum) 
-Contact agency or responsible this property (+32 ... or 02 ...)
+Title : Output final - Data set and Data Type 
+Transaction Type (to rent or to sale) => Category
+furnished or not => Boolean 
+Property Type (Apartment, House, Businesses, Land, Garage, Investment property, Student housing, Miscellaneous property) => Category
+Date of construction => integer 
+Condition (new or renovated or to renovated) => Category
+Size of the land (m2) => integer 
+Size of the house (m2) => integer
+PEB (kW for m²) => Float 
+Elevator or not ? => Boolean 
+Room numbers => Integer 
+Numbers of bathroom => Integer
+Swimming or not ? => Boolean 
+Balcon or not ?  => Boolean
+Garden or not ?  => Boolean
+Terrasse or not ?  => Boolean
+Price (€) => Integer
+region => Category
+code postal => Integer
+street => String
+nbr adress => Integer
+Availability (datum) => Integer
+Name agency or Private owner => String 
+Email => string
+Phone number (+32 ... or 02 ...) or not => Boolean 
