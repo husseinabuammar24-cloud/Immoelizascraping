@@ -1,1 +1,23 @@
-
+Title : Output final - Data set 
+Transaction Type (to rent or to sale)
+furnished or not
+Property Type (Apartment, House, Businesses, Land, Garage, Investment property, Student housing, Miscellaneous property)
+Date of construction 
+Condition (new or renovated or to renovated) 
+Size of the land (m2)
+Size of the house (m2)
+PEB (kW for m²)
+Elevator or not ? 
+Room numbers 
+Numbers of bathroom
+Swimming or not ? 
+Balcon or not ? 
+Garden or not ? 
+Terrasse or not ? 
+Price (€) 
+region 
+code postal
+street
+nbr adress 
+Availability (datum) 
+Contact agency or responsible this property (+32 ... or 02 ...)
