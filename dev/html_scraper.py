@@ -74,6 +74,47 @@ class ImmoVlanScraper:
                 return property_data
         return data
     
+    def get_agency(self, html : str):
+        
+        soup = BeautifulSoup(html,"html.parser")
+        data = {
+            "name" : None,
+            "phone" : [],
+            "email" : [],
+            "agency_url" : None
+        }
+        seller_id = None
+        match = re.search(r"seller_id ['\"]?\s*:\s*['\"]?(\d+)", html)
+        if match:
+            seller_id = match.group(1)
+        
+        if not seller_id:
+            return data
+        
+        for a in soup.find_all("a", href=True):
+            href = a["href"]
+
+            if "guideimmobilier/detail" in href and seller_id in href : 
+                data["agency_url"] = urljoin("https://immovlan.be", href)
+                break
+        
+        if not data["agency_url"]:
+            return data
+        
+        agency_html = self.fetch_html(data["agency_url"])
+        agency_soup = BeautifulSoup(agency_html,"html.parser")
+
+        h1 = agency_soup.find("h1")
+        if h1 : 
+            data["name"] = self.clean_text(h1.get_text())
+        
+        data["phone"] = list(set(
+            re.findall(r"\+32\s?\d[\d\s./-]{6,}", agency_html)
+        ))
+
+        return data
+
+
     @staticmethod
     def to_json_file(filepath: str, dictionary : dict) -> None :
         """
@@ -84,3 +125,21 @@ class ImmoVlanScraper:
         """
         with open(filepath,"w") as file:
             json.dump(dictionary, file, ensure_ascii=False)
+
+#test 
+if __name__ == "__main__":
+
+    url = "https://immovlan.be/fr/detail/maison/a-vendre/1150/woluwe-saint-pierre/vbe35189"
+
+    scraper = ImmoVlanScraper()
+
+    html = scraper.fetch_html(url)
+
+    property_data = scraper.get_data(html)
+    agency_data = scraper.get_agency(html)
+
+    print("\nPROPERTY DATA")
+    print(property_data)
+
+    print("\nAGENCY DATA")
+    print(agency_data)
