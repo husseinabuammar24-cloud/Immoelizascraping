@@ -5,14 +5,15 @@ key [type] : description (unit)
 transaction_type [category : "Rent", "Sale"] : Transaction type : to rent or for sale
 price [int] : Price (€)
 province [category : "Antwerp", "Brabant wallon", "Brussels", "Hainaut", "Liège", "Limburg", "Luxembourg", "Namur", "Oost vlaanderen", "Vlaams brabant", "West vlaanderen"]  : Province
-property_type [category : "Apartment", "House", "Businesses", "Land", "Garage", "Investment property", "Student housing", "Miscellaneous property"] : Property type
+property_type [category : "Apartment", "House"] : Property type
 date_of construction [int] : Date of construction
-property_condition (category : "New", "Normal", "Excellent", "To renovate", "Fully renovated"] : Property condition
+property_condition [category : "New", "Normal", "Excellent", "To renovate", "Fully renovated"] : Property condition
 land_surface [int] : Surface of the land (m²)
 livable_surface [int] : Surface of the house (m²)
 energy_consumption [int] : Yearly total primary energy consumption (kWh/year)
 number_of_rooms [int] : Numbr of rooms
 number_of_bathrooms [int] : Number of bathrooms
+garage [int] : Number of garages
 elevator [bool] : Elevator or not
 swimming_pool [bool] : Swimming pool or not
 balcony [bool] : Balcony or not
