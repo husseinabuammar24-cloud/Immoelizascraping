@@ -1,25 +1,28 @@
-Title : Output final - Data set and Data Type 
-Transaction Type (to rent or to sale) => Category
-furnished or not => Boolean 
-Property Type (Apartment, House, Businesses, Land, Garage, Investment property, Student housing, Miscellaneous property) => Category
-Date of construction => integer 
-Condition (new or renovated or to renovated) => Category
-Size of the land (m2) => integer 
-Size of the house (m2) => integer
-PEB (kW for m²) => Float 
-Elevator or not ? => Boolean 
-Room numbers => Integer 
-Numbers of bathroom => Integer
-Swimming or not ? => Boolean 
-Balcon or not ?  => Boolean
-Garden or not ?  => Boolean
-Terrasse or not ?  => Boolean
-Price (€) => Integer
-region => Category
-code postal => Integer
-street => String
-nbr adress => Integer
-Availability (datum) => Integer
-Name agency or Private owner => String 
-Email => string
-Phone number (+32 ... or 02 ...) or not => Boolean 
+Data set and Data Type 
+-----------------------
+key [type] : description (unit)
+-----------------------
+transaction_type [category : "Rent", "Sale"] : Transaction type : to rent or for sale
+price [int] : Price (€)
+province [category : "Antwerp", "Brabant wallon", "Brussels", "Hainaut", "Liège", "Limburg", "Luxembourg", "Namur", "Oost vlaanderen", "Vlaams brabant", "West vlaanderen"]  : Province
+property_type [category : "Apartment", "House", "Businesses", "Land", "Garage", "Investment property", "Student housing", "Miscellaneous property"] : Property type
+date_of construction [int] : Date of construction
+property_condition (category : "New", "Normal", "Excellent", "To renovate", "Fully renovated"] : Property condition
+land_surface [int] : Surface of the land (m²)
+livable_surface [int] : Surface of the house (m²)
+energy_consumption [int] : Yearly total primary energy consumption (kWh/year)
+number_of_rooms [int] : Numbr of rooms
+number_of_bathrooms [int] : Number of bathrooms
+elevator [bool] : Elevator or not
+swimming_pool [bool] : Swimming pool or not
+balcony [bool] : Balcony or not
+garden [bool] : Garden or not
+terrace [int] : Terrasse surface (m²)
+furnished [bool] : Furnished or not
+postal_code [int] : Postal code
+street [string] : Street name
+street_number [int] : Street number
+availability [date] : Availability
+seller_type [string] : Name of agency or private owner 
+email [string] : Contact email
+phone_number [bool] : Phone number or not
