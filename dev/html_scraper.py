@@ -18,18 +18,22 @@ class ImmoVlanScraper:
         self.session = session
 
     def fetch_html(self, url: str) -> str:
-        print("FETCHING:", url)
+        """
+        Method that requests raw HTML text. 
 
+        :param url : A string with the url of the html to request. 
+        : return: A string with the html text. 
+
+        """
         try:
+            # header is used to tell the website that the script is not from automated bot 
             headers = {"User-Agent": "Mozilla/5.0"}
-            response = self.session.get(url, headers=headers, timeout=10)
-
-            print("STATUS CODE:", response.status_code)
+            response = self.session.get(url, headers=headers)
 
             return response.text
 
-        except Exception as e:
-            print("FETCH ERROR:", e)
+        except (requests.exceptions.HTTPError,requests.exceptions.ReadTimeout) as err:
+            print(err.args[0])
             return ""
     
     def clean_text(self, text: str) -> str:
