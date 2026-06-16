@@ -6,24 +6,25 @@ transaction_type [category : "Rent", "Sale"] : Transaction type : to rent or for
 price [int] : Price (€)
 province [category : "Antwerp", "Brabant wallon", "Brussels", "Hainaut", "Liège", "Limburg", "Luxembourg", "Namur", "Oost vlaanderen", "Vlaams brabant", "West vlaanderen"]  : Province
 property_type [category : "Apartment", "House"] : Property type
+property_subtype [category : "Duplex", "Triplex", "Flat", "FlatStudio", "GroundFloor", "Penthouse", "House", "MixedBuilding", "Villa", "MasterHouse"] : Property sub type
 date_of construction [int] : Date of construction
 property_condition [category : "New", "Normal", "Excellent", "To renovate", "Fully renovated"] : Property condition
 land_surface [int] : Surface of the land (m²)
 livable_surface [int] : Surface of the house (m²)
 energy_consumption [int] : Yearly total primary energy consumption (kWh/year)
-number_of_rooms [int] : Numbr of rooms
+number_of_bedrooms [int] : Numbr of bedrooms
 number_of_bathrooms [int] : Number of bathrooms
 garage [int] : Number of garages
 elevator [bool] : Elevator or not
 swimming_pool [bool] : Swimming pool or not
 balcony [bool] : Balcony or not
-garden [bool] : Garden or not
+garden [int] : Garden surface (m²)
 terrace [int] : Terrasse surface (m²)
 furnished [bool] : Furnished or not
 postal_code [int] : Postal code
 street [string] : Street name
 street_number [int] : Street number
 availability [date] : Availability
-seller_type [string] : Name of agency or private owner 
+seller_id [int] : Id of the agency or 0 for private owners
 email [string] : Contact email
 phone_number [bool] : Phone number or not
