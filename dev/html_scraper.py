@@ -88,6 +88,13 @@ class ImmoVlanScraper:
         data = {}
         soup = BeautifulSoup(html, "html.parser")
 
+        # Handle error 404 page if property page does not exist
+        titles = soup.find_all("title")
+        for title in titles:
+            print(title.text)
+            if title.text == "Http404":
+                return data
+
         # retrieve data (transactionType, propertyType, propertySubType, price, sellerType, sellerId, 
         #                zipCode, city, peb, newconstruction) from js script
         scripts = soup.find_all("script")
