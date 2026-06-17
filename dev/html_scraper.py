@@ -119,6 +119,11 @@ class ImmoVlanScraper:
                     data["seller_id"] = property_data["sellerId"] if property_data["sellerType"] == "estateAgents" else 0
                 if "zipCode" in property_data:
                     data["postal_code"] = int(property_data["zipCode"])
+                
+                street, house_number = self.get_address(soup, property_data)
+
+                data["street"] = street
+                data["house_number"] = house_number
 
         # retrieve data from general info division
         gen_data = {}
@@ -238,6 +243,39 @@ class ImmoVlanScraper:
         data["email"] = str(re.findall(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+", agency_html))
 
         return data
+    
+    def get_address(self, soup, property_data):
+        """
+        Address extraction method 
+        """
+
+        if not soup.title:
+            return None, None
+
+        title = soup.title.text
+
+        try:
+            if "à vendre à" in title:
+                address_part = title.split("à vendre à")[1]
+            else:
+                return None, None
+
+            city = property_data.get("city")
+            if city:
+                address_part = address_part.replace(city, "")
+
+            address_part = address_part.split("(")[0].strip()
+
+            import re
+            match = re.search(r"(.+?)\s+(\d+)$", address_part)
+
+            if match:
+                return match.group(1).strip(), int(match.group(2))
+
+            return address_part, None
+
+        except:
+            return None, None
 
     @staticmethod
     def to_json_file(filepath: str, dictionary : dict) -> None :
