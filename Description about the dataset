@@ -28,3 +28,5 @@ availability [date] : Availability
 seller_id [int] : Id of the agency or 0 for private owners
 email [string] : Contact email
 phone_number [bool] : Phone number or not
+latitude [float] : Latitude geographic coordinate
+longitude [float] : Longitude geographic coordinate
