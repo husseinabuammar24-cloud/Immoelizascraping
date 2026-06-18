@@ -41,33 +41,42 @@ Python main.py
 3. This script runs the whole code and it produces json file with the all the links and scraped information. The code runs approc 3 hours. the final result is .csv format in your directory
 
 ## Dataset
-Description about the dataset file has the 24 columns of the data information needed that listed below: 
+Description about the dataset file has the 28 columns of the data information needed that listed below: 
 
-Title : Output final 
-1.	Transaction Type (to rent or to sale)
-2.	Furnished or not
-3.	Property Type (Apartment, House, Businesses, Land, Garage, Investment property, Student housing, Miscellaneous property) 
-4.	Date of construction 
-5.	Condition (new or renovated or to renovated)
-6.	Size of the land (m2)
-7.	Size of the house (m2)
-8.	PEB (kW for m²)
-9.	Elevator or not? 
-10.	Room numbers
-11.	Numbers of bathroom
-12.	Swimming or not?
-13.	Balcon or not?
-14.	Garden or not? 
-15.	Terrasse or not?
-16.	Price (€)
-17.	region
-18.	code postal 
-19.	street
-20.	nbr adress 
-21.	Availability (datum) 
-22.	Name agency or Private owner 
-23.	Email
-24.	Phone number (+32 ... or 02 ...) or not
+Data set and Data Type 
+-----------------------
+key [type] : description (unit)
+-----------------------
+
+1.	Transaction_type [category : "Rent", "Sale"] : Transaction type : to rent or for sale
+2.	Price [int] : Price (€)
+3.	Province [category : "Antwerp", "Brabant wallon", "Brussels", "Hainaut", "Liège", "Limburg", "Luxembourg", "Namur", "Oost vlaanderen", "Vlaams brabant", "West vlaanderen"]  : Province
+4.	Property_type [category : "Apartment", "House"] : Property type
+5.	Property_subtype [category : "Duplex", "Triplex", "Flat", "flatstudio", "groundfloor", "Penthouse", "House", "mixedbuilding", "Villa", "masterhouse"] : Property sub type
+6.	Date_of construction [int] : Date of construction
+7.	Property_condition [category : "New", "Normal", "Excellent", "To renovate", "Fully renovated"] : Property condition
+8.	Land_surface [int] : Surface of the land (m²)
+9.	Livable_surface [int] : Surface of the house (m²)
+10.	Energy_consumption [int] : Yearly total primary energy consumption (kwh/year)
+11.	Number_of_bedrooms [int] : Numbr of bedrooms
+12.	Number_of_bathrooms [int] : Number of bathrooms
+13.	Garage [int] : Number of garages
+14.	Elevator [bool] : Elevator or not
+15.	Swimming_pool [bool] : Swimming pool or not
+16.	Balcony [bool] : Balcony or not
+17.	Garden [int] : Garden surface (m²)
+18.	Terrace [int] : Terrasse surface (m²)
+19.	Furnished [bool] : Furnished or not
+20.	Postal_code [int] : Postal code
+21.	Street [string] : Street name
+22.	Street_number [int] : Street number
+23.	Availability [date] : Availability
+24.	Seller_id [int] : Id of the agency or 0 for private owners
+25.	Email [string] : Contact email
+26.	Phone_number [bool] : Phone number or not
+27.	Latitude [float] : Latitude geographic coordinate
+28.	Longitude [float] : Longitude geographic coordinate
+
 
 ## Visuals
 Architecture diagram from your slides + a screenshot of the output CSV.
