@@ -151,7 +151,7 @@ class ImmoVlanScraper:
         if "Number of bathrooms" in gen_data:
             data["number_of_bathrooms"] = int(gen_data["Number of bathrooms"])
         if "Number of garages" in gen_data:
-            data["number_of_garage"] = int(gen_data["Number of garages"])
+            data["garage"] = int(gen_data["Number of garages"])
         if "Elevator" in gen_data:
             data["elevator"] = gen_data["Elevator"] == "Yes"
         if "Swimming pool" in gen_data:
@@ -176,7 +176,7 @@ class ImmoVlanScraper:
         if street is not None:
             data["street"] = street
         if house_number is not None:
-            data["house_number"] = house_number
+            data["street_number"] = house_number
 
         agency = self.get_agency(html)
         if "email" in agency and agency["email"] != "":
