@@ -314,3 +314,16 @@ class ImmoVlanScraper:
         """
         with open(filepath,"w") as file:
             json.dump(dictionary, file, ensure_ascii=False)
+
+    @staticmethod
+    def to_csv_file(filepath: str, dictionary : dict) -> None :
+        """
+        Method that stores the data structure into a CSV file.
+
+        :param filepath: A string with the file path where the csv is stored.
+        :param dictionary: A dictionary that is stored in the csv file.
+        """
+        import pandas
+        
+        df = pandas.DataFrame.from_dict(dictionary,orient="index")
+        df.to_csv(filepath)
