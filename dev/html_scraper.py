@@ -119,11 +119,6 @@ class ImmoVlanScraper:
                     data["seller_id"] = property_data["sellerId"] if property_data["sellerType"] == "estateAgents" else 0
                 if "zipCode" in property_data:
                     data["postal_code"] = int(property_data["zipCode"])
-                
-                street, house_number = self.get_address(soup, property_data)
-
-                data["street"] = street
-                data["house_number"] = house_number
 
         # retrieve data from general info division
         gen_data = {}
@@ -171,6 +166,12 @@ class ImmoVlanScraper:
         if province != "Unknown":
             data["province"] = province
 
+        street, house_number = self.get_address(soup, property_data)
+        if street is not None:
+            data["street"] = street
+        if house_number is not None:
+            data["house_number"] = house_number
+
         agency = self.get_agency(html)
         if "email" in agency and agency["email"] != "":
             data["email"] = agency.get("email")
@@ -181,6 +182,18 @@ class ImmoVlanScraper:
     
     def get_agency(self, html) -> dict :
 
+        """
+            Method that extracts agency information (name, phone, email, agency URL)
+            from the property HTML page.
+
+            :param html: Raw HTML of the property page.
+            :return: Dictionary containing agency data:
+                    - name (str): Agency name
+                    - phone (list): List of phone numbers
+                    - email (list): List of email addresses
+                    - agency_url (str): URL of the agency page
+        """
+
         soup = BeautifulSoup(html, "html.parser")
 
         data = {
@@ -190,9 +203,7 @@ class ImmoVlanScraper:
             "agency_url": ""
         }
 
-        # -------------------------
-        # 1. seller_id
-        # -------------------------
+        # 1. Extract seller_id from the property page HTML
         match = re.search(r"seller_id['\"]?\s*:\s*['\"]?(\d+)", html)
         seller_id = match.group(1) if match else None
 
@@ -204,9 +215,7 @@ class ImmoVlanScraper:
 
         agency_html = self.fetch_html(agency_url)
 
-        # -------------------------
-        # 2. find agency url (SAME AS WORKING CODE)
-        # -------------------------
+        # 2. Find the agency URL from the property page links
         
         agency_url = None
 
@@ -221,10 +230,9 @@ class ImmoVlanScraper:
             return data
 
         data["agency_url"] = agency_url
+        
+        "3.scrape agency page"
 
-        # -------------------------
-        # 3. scrape agency page
-        # -------------------------
         agency_html = self.fetch_html(agency_url)
 
         if "<!DOCTYPE html>" in agency_html and len(agency_html) < 2000:
@@ -244,9 +252,15 @@ class ImmoVlanScraper:
 
         return data
     
-    def get_address(self, soup, property_data):
-        """
-        Address extraction method 
+    def get_address(self, soup:BeautifulSoup, property_data:dict)->tuple[str,int]:
+
+        """:
+        Method that extracts the street name and house number from the property page title
+        soup: A BeautifulSoup object containing the parsed HTML page.
+        property_data: A dictionary containing the property information extracted from the JSON script.
+        return: A tuple containing:
+                - street (str | None): The street name.
+                - house_number (int | None): The house number.
         """
 
         if not soup.title:
@@ -255,26 +269,34 @@ class ImmoVlanScraper:
         title = soup.title.text
 
         try:
-            if "à vendre à" in title:
-                address_part = title.split("à vendre à")[1]
-            else:
-                return None, None
 
-            city = property_data.get("city")
-            if city:
-                address_part = address_part.replace(city, "")
+            keywords = [
+                "for sale in",
+                "for rent in"
+            ]
+
+            address_part = None
+
+            for keyword in keywords:
+                if keyword in title:
+                    address_part = title.split(keyword)[1]
+                    break
+
+            if address_part is None:
+                return None, None
 
             address_part = address_part.split("(")[0].strip()
 
-            import re
             match = re.search(r"(.+?)\s+(\d+)$", address_part)
 
             if match:
-                return match.group(1).strip(), int(match.group(2))
+                street = match.group(1).strip()
+                house_number = int(match.group(2))
+                return street, house_number
 
             return address_part, None
 
-        except:
+        except Exception:
             return None, None
 
     @staticmethod
