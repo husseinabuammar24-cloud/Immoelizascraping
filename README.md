@@ -1,5 +1,3 @@
-# Immoelizascraping
-Gathers information about at least 10000 properties all over Belgium
 # Immo-Eliza — Real Estate Data Collection
 
 ## Description
@@ -43,6 +41,7 @@ Python main.py
 3. This script runs the whole code and it produces json file with the all the links and scraped information. The code runs approc 3 hours. the final result is .csv format in your directory
 
 ## Dataset
+<<<<<<< HEAD
 Description about the dataset file has the 28 columns of the data information needed that listed below: 
 
 Data set and Data Type 
@@ -77,7 +76,6 @@ key [type] : description (unit)
 26.	Phone_number [bool] : Phone number or not
 27.	Latitude [float] : Latitude geographic coordinate
 28.	Longitude [float] : Longitude geographic coordinate
-
 
 ## Visuals
 Architecture diagram from your slides + a screenshot of the output CSV.
