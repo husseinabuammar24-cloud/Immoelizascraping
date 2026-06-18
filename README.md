@@ -81,9 +81,9 @@ key [type] : description (unit)
 Architecture diagram from your slides + a screenshot of the output CSV.
 
 ## Contributors
-Ibrahim Ouezghar - Project Lead
-Geaten Gbricteux - QA & Data Architect
-Hussain Abuammar - Git Command
+Ibrahim Ouezghar - Project Lead  
+Gaetan Bricteux - QA & Data Architect  
+Hussain Abuammar - Git Command  
 Gunay Bayramova - Documentation
 
 ## Timeline
