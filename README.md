@@ -33,6 +33,7 @@ The scraper runs as one pipeline, launched by `main.py`:
 Packages installed can be found in requirements.txt file
 
 ## Usage
+
 1. Clone the Repository to your local machine. 
 2. to run the script, you can execute the main.py file from your command line. 
 
@@ -47,7 +48,6 @@ Data set and Data Type
 -----------------------
 key [type] : description (unit)
 -----------------------
-
 1.	Transaction_type [category : "Rent", "Sale"] : Transaction type : to rent or for sale
 2.	Price [int] : Price (€)
 3.	Province [category : "Antwerp", "Brabant wallon", "Brussels", "Hainaut", "Liège", "Limburg", "Luxembourg", "Namur", "Oost vlaanderen", "Vlaams brabant", "West vlaanderen"]  : Province
@@ -77,14 +77,13 @@ key [type] : description (unit)
 27.	Latitude [float] : Latitude geographic coordinate
 28.	Longitude [float] : Longitude geographic coordinate
 
-
 ## Visuals
 Architecture diagram from your slides + a screenshot of the output CSV.
 
 ## Contributors
-Ibrahim Ouezghar - Project Lead
-Geaten Gbricteux - QA & Data Architect
-Hussain Abuammar - Git Command
+Ibrahim Ouezghar - Project Lead  
+Gaetan Bricteux - QA & Data Architect  
+Hussain Abuammar - Git Command  
 Gunay Bayramova - Documentation
 
 ## Timeline
