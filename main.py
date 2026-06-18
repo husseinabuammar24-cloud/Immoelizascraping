@@ -1,19 +1,18 @@
 import requests
 import time
+import asyncio
 
-from dev import html_scraper
-from dev.url_collection import provinces_url, save_to_file
+from dev import html_scraper, url_collection
 
-def main() -> None: 
-
+def main() -> None:
     start = time.time()
-    # scrape urls
-    results = provinces_url ()
+    # 1. scrape urls of all provinces
+    results = asyncio.run(url_collection.provinces_url ())
 
-    # save urls to file
+    # 2. save urls to output file
     url_output_file = "all_properties.txt"
-    save_to_file(results, url_output_file)
-    print(f"Retrieved properties urls, it took {time.time() - start:.1f} sec.")
+    url_collection.save_to_file(results, url_output_file)
+    print(f"Saved {sum(len(v) for v in results.values())} urls in {time.time()-start:.1f} s.")
 
     start = time.time()
     properties_data = {}
