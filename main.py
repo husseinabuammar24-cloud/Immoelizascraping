@@ -4,25 +4,33 @@ import asyncio
 
 from dev import html_scraper, url_collection
 
-def main() -> None: 
-  
+def main() -> None:
     start = time.time()
     # 1. scrape urls of all provinces
-    results = asyncio.run(url_collection.provinces_url (pages=5))
+    results = asyncio.run(url_collection.provinces_url ())
 
     # 2. save urls to output file
     url_output_file = "all_properties.txt"
     url_collection.save_to_file(results, url_output_file)
     print(f"Saved {sum(len(v) for v in results.values())} urls in {time.time()-start:.1f} s.")
 
-    for key, urls in results.items():
-        for url in urls:
-            session = requests.Session()
+    start = time.time()
+    properties_data = {}
+    session = requests.Session()
+    # scrape properties data
+    with open(url_output_file,"r") as file:
+        for url in file.readlines():
+            ref = url.strip().split("/")[-1]
             immovlan_scraper = html_scraper.ImmoVlanScraper(session)
             html = immovlan_scraper.fetch_html(url)
-            propertyData = immovlan_scraper.get_data(html)
+            prop_data = immovlan_scraper.get_data(html)
+            if len(prop_data):
+                properties_data[ref] = prop_data
 
-            html_scraper.ImmoVlanScraper.to_json_file("propertyData.json", propertyData)
-    
+    # save properties data to file
+    data_output_file = "propertyData.json"
+    html_scraper.ImmoVlanScraper.to_json_file(data_output_file, properties_data)
+    print(f"Scraped {len(properties_data)} properties data, it took {time.time() - start:.1f} sec.")
+
 if __name__ == "__main__":
     main()
