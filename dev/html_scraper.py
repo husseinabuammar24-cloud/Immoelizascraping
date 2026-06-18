@@ -151,7 +151,7 @@ class ImmoVlanScraper:
         if "Number of bathrooms" in gen_data:
             data["number_of_bathrooms"] = int(gen_data["Number of bathrooms"])
         if "Number of garages" in gen_data:
-            data["number_of_garage"] = int(gen_data["Number of garages"])
+            data["garage"] = int(gen_data["Number of garages"])
         if "Elevator" in gen_data:
             data["elevator"] = gen_data["Elevator"] == "Yes"
         if "Swimming pool" in gen_data:
@@ -176,7 +176,7 @@ class ImmoVlanScraper:
         if street is not None:
             data["street"] = street
         if house_number is not None:
-            data["house_number"] = house_number
+            data["street_number"] = house_number
 
         agency = self.get_agency(html)
         if "email" in agency and agency["email"] != "":
@@ -314,3 +314,16 @@ class ImmoVlanScraper:
         """
         with open(filepath,"w") as file:
             json.dump(dictionary, file, ensure_ascii=False)
+
+    @staticmethod
+    def to_csv_file(filepath: str, dictionary : dict) -> None :
+        """
+        Method that stores the data structure into a CSV file.
+
+        :param filepath: A string with the file path where the csv is stored.
+        :param dictionary: A dictionary that is stored in the csv file.
+        """
+        import pandas
+        
+        df = pandas.DataFrame.from_dict(dictionary,orient="index")
+        df.to_csv(filepath)

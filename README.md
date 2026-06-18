@@ -33,6 +33,7 @@ The scraper runs as one pipeline, launched by `main.py`:
 Packages installed can be found in requirements.txt file
 
 ## Usage
+
 1. Clone the Repository to your local machine. 
 2. to run the script, you can execute the main.py file from your command line. 
 
@@ -41,7 +42,6 @@ Python main.py
 3. This script runs the whole code and it produces json file with the all the links and scraped information. The code runs approc 3 hours. the final result is .csv format in your directory
 
 ## Dataset
-<<<<<<< HEAD
 Description about the dataset file has the 28 columns of the data information needed that listed below: 
 
 Data set and Data Type 
