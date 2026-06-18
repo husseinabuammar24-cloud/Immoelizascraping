@@ -97,6 +97,12 @@ class ImmoVlanScraper:
         # retrieve data (transaction_type, price, property_type, seller_type, postal_code) from js script
         scripts = soup.find_all("script")
         for script in scripts:
+            match = re.search(r'window.AD_LONGITUDE = \'(.*?)\';\n\s+window.AD_LATITUDE = \'(.*?)\';\n', script.text)
+            if match :
+                longitude = match.group(1)
+                latitude = match.group(2)
+                data["longitude"] = float(longitude)
+                data["latitude"] = float(latitude)
             match = re.search(r'STORAGE_KEY_PROPERTY_DETAILS,\n\s+JSON\.stringify\(\{(.*?)\}\)', script.text, re.DOTALL)
             if match :
                 json_str = '{' + match.group(1) + '}'
