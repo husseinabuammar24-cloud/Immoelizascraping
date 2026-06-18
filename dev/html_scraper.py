@@ -172,7 +172,7 @@ class ImmoVlanScraper:
         if province != "Unknown":
             data["province"] = province
 
-        street, house_number = self.get_address(soup, property_data)
+        street, house_number = self.get_address(soup)
         if street is not None:
             data["street"] = street
         if house_number is not None:
@@ -258,13 +258,12 @@ class ImmoVlanScraper:
 
         return data
     
-    def get_address(self, soup:BeautifulSoup, property_data:dict)->tuple[str,int]:
+    def get_address(self, soup:BeautifulSoup)->tuple[str|None,int|None]:
 
         """:
         Method that extracts the street name and house number from the property page title
-        soup: A BeautifulSoup object containing the parsed HTML page.
-        property_data: A dictionary containing the property information extracted from the JSON script.
-        return: A tuple containing:
+        :param soup: A BeautifulSoup object containing the parsed HTML page.
+        :return: A tuple containing:
                 - street (str | None): The street name.
                 - house_number (int | None): The house number.
         """
@@ -293,7 +292,7 @@ class ImmoVlanScraper:
 
             address_part = address_part.split("(")[0].strip()
 
-            match = re.search(r"(.+?)\s+(\d+)$", address_part)
+            match = re.search(r"(.+?)\s+(\d+)", address_part)
 
             if match:
                 street = match.group(1).strip()
