@@ -1,6 +1,7 @@
 import requests
 from requests import Session
 from bs4 import BeautifulSoup
+import csv 
 import json
 import re
 from urllib.parse import urljoin
@@ -305,12 +306,20 @@ class ImmoVlanScraper:
             return None, None
 
     @staticmethod
-    def to_json_file(filepath: str, dictionary : dict) -> None :
+    def to_csv_file(filepath: str, data: list) -> None:
         """
-        Method that stores the data structure into a JSON file.
+        Method that stores the data structure into a CSV file.
 
-        :param filepath: A string with the file path where the json is stored.
-        :param dictionary: A dictionary that is stored in the json file.
+        :param filepath: A string with the file path where the csv is stored.
+        :param data: A list of dictionaries, one dictionary per property.
         """
-        with open(filepath,"w") as file:
-            json.dump(dictionary, file, ensure_ascii=False)
+        fieldnames = []
+        for row in data:
+            for key in row:
+                if key not in fieldnames:
+                    fieldnames.append(key)
+
+        with open(filepath, "w", newline="", encoding="utf-8") as file:
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(data)

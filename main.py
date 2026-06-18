@@ -28,8 +28,9 @@ def main() -> None:
                 properties_data[ref] = prop_data
 
     # save properties data to file
-    data_output_file = "propertyData.json"
-    html_scraper.ImmoVlanScraper.to_json_file(data_output_file, properties_data)
+    data_output_file = "properties.csv"
+    html_scraper.ImmoVlanScraper.to_csv_file(data_output_file, list(properties_data.values()))
+
     print(f"Scraped {len(properties_data)} properties data, it took {time.time() - start:.1f} sec.")
 
 if __name__ == "__main__":
