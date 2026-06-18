@@ -47,22 +47,22 @@ class ImmoVlanScraper:
         text = re.sub(r'\s+',' ',text) # replace no-break spaces
         return text
     
-    def get_province_from_zip(self, zip_code):
+    def get_province_from_zip(self, zip_code) -> str:
         try:
             zip_code = int(zip_code)
         except:
-            return "Inconnu"
+            return "Unknown"
 
         if 1000 <= zip_code <= 1299:
-            return "Bruxelles"
+            return "Brussels"
         elif 1300 <= zip_code <= 1499:
             return "Brabant wallon"
         elif 1500 <= zip_code <= 1999 or 3000 <= zip_code <= 3499:
-            return "Brabant flamand"
+            return "Vlaams brabant"
         elif 2000 <= zip_code <= 2999:
-            return "Anvers"
+            return "Antwerp"
         elif 3500 <= zip_code <= 3999:
-            return "Limbourg"
+            return "Limburg"
         elif 4000 <= zip_code <= 4999:
             return "Liège"
         elif 5000 <= zip_code <= 5999:
@@ -72,11 +72,11 @@ class ImmoVlanScraper:
         elif 6600 <= zip_code <= 6999:
             return "Luxembourg"
         elif 8000 <= zip_code <= 8999:
-            return "Flandre occidentale"
+            return "West vlaanderen"
         elif 9000 <= zip_code <= 9999:
-            return "Flandre orientale"
+            return "Oost vlaanderen"
         else:
-            return "Inconnu"
+            return "Unknown"
 
     def get_data(self, html: str) -> dict:
         """
@@ -97,6 +97,12 @@ class ImmoVlanScraper:
         # retrieve data (transaction_type, price, property_type, seller_type, postal_code) from js script
         scripts = soup.find_all("script")
         for script in scripts:
+            match = re.search(r'window.AD_LONGITUDE = \'(.*?)\';\n\s+window.AD_LATITUDE = \'(.*?)\';\n', script.text)
+            if match :
+                longitude = match.group(1)
+                latitude = match.group(2)
+                data["longitude"] = float(longitude)
+                data["latitude"] = float(latitude)
             match = re.search(r'STORAGE_KEY_PROPERTY_DETAILS,\n\s+JSON\.stringify\(\{(.*?)\}\)', script.text, re.DOTALL)
             if match :
                 json_str = '{' + match.group(1) + '}'
@@ -161,35 +167,51 @@ class ImmoVlanScraper:
         if "Availability" in gen_data:
             data["availability"] = gen_data["Availability"]
         
-        zip_code = data.get("zipCode") or data.get("zipcode")
-        data["province"] = self.get_province_from_zip(zip_code)
+        zip_code = data.get("postal_code")
+        province = self.get_province_from_zip(zip_code)
+        if province != "Unknown":
+            data["province"] = province
+
+        street, house_number = self.get_address(soup)
+        if street is not None:
+            data["street"] = street
+        if house_number is not None:
+            data["house_number"] = house_number
 
         agency = self.get_agency(html)
-        data["agency_name"] = agency.get("name")
-        data["agency_phone"] = agency.get("phone")
-        data["agency_url"] = agency.get("agency_url")
+        if "email" in agency and agency["email"] != "":
+            data["email"] = agency.get("email")
+        if "phone" in agency and agency["phone"] != "":
+            data["phone_number"] = agency["phone"]
 
         return data
     
-    def get_agency(self, html):
+    def get_agency(self, html) -> dict :
 
-        print(">>> GET_AGENCY START")
+        """
+            Method that extracts agency information (name, phone, email, agency URL)
+            from the property HTML page.
+
+            :param html: Raw HTML of the property page.
+            :return: Dictionary containing agency data:
+                    - name (str): Agency name
+                    - phone (list): List of phone numbers
+                    - email (list): List of email addresses
+                    - agency_url (str): URL of the agency page
+        """
+
         soup = BeautifulSoup(html, "html.parser")
 
         data = {
-            "name": None,
-            "phone": [],
-            "email": [],
-            "agency_url": None
+            "name": "",
+            "phone": "",
+            "email": "",
+            "agency_url": ""
         }
 
-        # -------------------------
-        # 1. seller_id
-        # -------------------------
+        # 1. Extract seller_id from the property page HTML
         match = re.search(r"seller_id['\"]?\s*:\s*['\"]?(\d+)", html)
         seller_id = match.group(1) if match else None
-
-        print("SELLER_ID =", seller_id)
 
         if not seller_id:
             return data
@@ -197,13 +219,9 @@ class ImmoVlanScraper:
         agency_url = f"https://immovlan.be/fr/guideimmobilier/detail/{seller_id}"
         data["agency_url"] = agency_url
 
-        print("AGENCY URL =", agency_url)
         agency_html = self.fetch_html(agency_url)
-        print("AGENCY HTML SIZE =", len(agency_html))
 
-        # -------------------------
-        # 2. find agency url (SAME AS WORKING CODE)
-        # -------------------------
+        # 2. Find the agency URL from the property page links
         
         agency_url = None
 
@@ -218,24 +236,15 @@ class ImmoVlanScraper:
             return data
 
         data["agency_url"] = agency_url
+        
+        "3.scrape agency page"
 
-        print("AGENCY URL =", agency_url)
-
-        # -------------------------
-        # 3. scrape agency page
-        # -------------------------
         agency_html = self.fetch_html(agency_url)
-        print("AGENCY HTML LENGTH =", len(agency_html))
-
-        print("AGENCY HTML SIZE =", len(agency_html))
-        print("AGENCY HTML START =", agency_html[:200])
 
         if "<!DOCTYPE html>" in agency_html and len(agency_html) < 2000:
             print("WARNING: page agency incomplete or blocked")
             return data
         agency_soup = BeautifulSoup(agency_html, "html.parser")
-        print("H1 FOUND:", [h.get_text(strip=True) for h in agency_soup.find_all("h1")])
-        print("AGENCY HTML START : ", agency_html[:200])
         title = agency_soup.find("h1")
 
         if not title:
@@ -244,11 +253,56 @@ class ImmoVlanScraper:
         if title :
             data["name"] = self.clean_text(title.get_text())
 
-        data["phone"] = re.findall(r"\+32\s?\d[\d\s./-]{6,}", agency_html)
-        data["email"] = re.findall(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+", agency_html)
+        data["phone"] = str(re.findall(r"\+32\s?\d[\d\s./-]{6,}", agency_html))
+        data["email"] = str(re.findall(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+", agency_html))
 
         return data
+    
+    def get_address(self, soup:BeautifulSoup)->tuple[str|None,int|None]:
 
+        """:
+        Method that extracts the street name and house number from the property page title
+        :param soup: A BeautifulSoup object containing the parsed HTML page.
+        :return: A tuple containing:
+                - street (str | None): The street name.
+                - house_number (int | None): The house number.
+        """
+
+        if not soup.title:
+            return None, None
+
+        title = soup.title.text
+
+        try:
+
+            keywords = [
+                "for sale in",
+                "for rent in"
+            ]
+
+            address_part = None
+
+            for keyword in keywords:
+                if keyword in title:
+                    address_part = title.split(keyword)[1]
+                    break
+
+            if address_part is None:
+                return None, None
+
+            address_part = address_part.split("(")[0].strip()
+
+            match = re.search(r"(.+?)\s+(\d+)", address_part)
+
+            if match:
+                street = match.group(1).strip()
+                house_number = int(match.group(2))
+                return street, house_number
+
+            return address_part, None
+
+        except Exception:
+            return None, None
 
     @staticmethod
     def to_json_file(filepath: str, dictionary : dict) -> None :
