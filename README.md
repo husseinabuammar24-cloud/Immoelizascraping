@@ -77,7 +77,6 @@ key [type] : description (unit)
 27.	Latitude [float] : Latitude geographic coordinate
 28.	Longitude [float] : Longitude geographic coordinate
 
-
 ## Visuals
 Architecture diagram from your slides + a screenshot of the output CSV.
 
